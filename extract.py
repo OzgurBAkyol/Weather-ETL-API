@@ -34,6 +34,6 @@ def get_weather():
         print("Yeni veri eklendi:\n", df)
 
     else:
-        print(f"API'den veri alınırken hata oluştu: {response.status_code}")
+        print(f"Veri alınırken hata oluştu: {response.status_code}")
 
 get_weather()
