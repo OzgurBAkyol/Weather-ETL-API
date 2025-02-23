@@ -4,11 +4,11 @@ import pandas as pd
 def load_data():
     # PostgreSQL connection details
     conn = psycopg.connect(
-        dbname="your_dbname",
-        user="your_username",
-        password="your_password",
-        host="your_host",
-        port="your_port"
+        dbname="postgres",  # Eğer emin değilsen bu şekilde dene
+        user = "postgres",
+        password = "7991",
+        host = "localhost",
+        port = "5432"
     )
 
     df = pd.read_csv("weather_data.csv")
