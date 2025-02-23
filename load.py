@@ -1,34 +1,36 @@
 import psycopg
 import pandas as pd
 
-conn = psycopg.connect(
-    dbname="your_dbname",
-    user="your_username",
-    password="your_password",
-    host="your_host",
-    port="your_port"
-)
+def load_data():
+    # PostgreSQL connection details
+    conn = psycopg.connect(
+        dbname="your_dbname",
+        user="your_username",
+        password="your_password",
+        host="your_host",
+        port="your_port"
+    )
 
-#df = pd.read_csv("weather_data.csv")
+    df = pd.read_csv("weather_data.csv")
 
-with conn.cursor() as cur:
-    cur.execute("""
-        CREATE TABLE IF NOT EXISTS weather_data (
-            time TIMESTAMP,
-            temperature FLOAT,
-            wind_speed FLOAT
-        )
-    """)
-
-    for index, row in df.iterrows():
+    with conn.cursor() as cur:
         cur.execute("""
-            INSERT INTO weather_data (time, temperature, wind_speed)
-            VALUES (%s, %s, %s)
-            ON CONFLICT (time) DO UPDATE SET
-                temperature = EXCLUDED.temperature,
-                wind_speed = EXCLUDED.wind_speed
-        """, (row['time'], row['temperature'], row['wind_speed']))
+            CREATE TABLE IF NOT EXISTS weather_data (
+                time TIMESTAMP PRIMARY KEY,
+                temperature FLOAT,
+                wind_speed FLOAT
+            )
+        """)
 
-    conn.commit()
+        for index, row in df.iterrows():
+            cur.execute("""
+                INSERT INTO weather_data (time, temperature, wind_speed)
+                VALUES (%s, %s, %s)
+                ON CONFLICT (time) DO UPDATE SET
+                    temperature = EXCLUDED.temperature,
+                    wind_speed = EXCLUDED.wind_speed
+            """, (row['time'], row['temperature'], row['wind_speed']))
 
-conn.close()
+        conn.commit()
+
+    conn.close()

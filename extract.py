@@ -31,9 +31,7 @@ def get_weather():
 
         df.to_csv("weather_data.csv", mode="a", index=False, header=not file_exists)
 
-        print("Yeni veri eklendi:\n", df)
+        print("New data added:\n", df)
 
     else:
-        print(f"Veri alınırken hata oluştu: {response.status_code}")
-
-get_weather()
+        print(f"Error fetching data: {response.status_code}")
