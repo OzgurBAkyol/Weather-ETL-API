@@ -3,8 +3,8 @@ from load import load_data
 
 
 def main():
-    get_weather()
 
+    get_weather()
     load_data()
 
 if __name__ == "__main__":
