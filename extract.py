@@ -1,12 +1,10 @@
-import schedule
-import time
-import pandas as pd
 import requests
-import os
+from flask import Flask, jsonify
+
+app = Flask(__name__)
 
 def get_weather():
     url = "https://api.open-meteo.com/v1/forecast"
-
     params = {
         "latitude": 39.7767,
         "longitude": 30.5206,
@@ -17,21 +15,26 @@ def get_weather():
 
     if response.status_code == 200:
         data = response.json()
-        time = data['current_weather']['time']
-        current_temp = data['current_weather']['temperature']
-        current_wind_speed = data['current_weather']['windspeed']
-
-        df = pd.DataFrame([{
-            'time': time,
-            'temperature': current_temp,
-            'wind_speed': current_wind_speed
-        }])
-
-        file_exists = os.path.isfile("weather_data.csv")
-
-        df.to_csv("weather_data.csv", mode="a", index=False, header=not file_exists)
-
-        print("New data added:\n", df)
-
+        if 'current_weather' in data:
+            weather_data = {
+                "time": data['current_weather']['time'],
+                "temperature": data['current_weather']['temperature'],
+                "wind_speed": data['current_weather']['windspeed']
+            }
+            return weather_data
+        else:
+            return {"error": "API response format is incorrect"}
     else:
-        print(f"Error fetching data: {response.status_code}")
+        return {"error": f"Failed to fetch data: {response.status_code}"}
+
+@app.route('/weather', methods=['GET'])
+def weather_api():
+    return jsonify(get_weather())
+
+def run_flask():
+    print("Flask API başlatılıyor...")
+    app.run(debug=True, use_reloader=False, port=5000)
+
+if __name__ == '__main__':
+    run_flask()
+
