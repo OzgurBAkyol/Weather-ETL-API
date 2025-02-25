@@ -55,7 +55,7 @@ def save_weather_from_api():
                         wind_speed = EXCLUDED.wind_speed
                 """, (weather_time, weather_data['temperature'], weather_data['wind_speed']))
                 conn.commit()
-        print("Veri başarıyla kaydedildi:", weather_data)
+        print("Veri kaydedildi:", weather_data)
     else:
         print("API'den veri çekme hatası:", response.status_code)
 

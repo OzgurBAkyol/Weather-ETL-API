@@ -32,7 +32,7 @@ def weather_api():
     return jsonify(get_weather())
 
 def run_flask():
-    print("Flask API başlatılıyor...")
+    print("Flask API going...")
     app.run(debug=True, use_reloader=False, port=5000)
 
 if __name__ == '__main__':
